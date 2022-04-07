@@ -1,31 +1,31 @@
-/* 4kyu, Escape simple maze */
+/* Escape the maze */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
 
-typedef struct s_Maze{
+typedef struct Maze{
   unsigned height, width;
   char** grid;} Maze;
 
 typedef struct node *Node;
 
 typedef struct node {
-  int row; int col; Node parent; char dir;} node;
+  int row, col; Node parent; char dir;} node;
 
 typedef struct Queue {
-  Node *array; int back; int front; int size;} Queue;
+  Node *array; int back, front, size;} Queue;
 
-typedef struct {char key; int x; int y;} step;
+typedef struct {char key; int x, y;} step;
 static step steps[] = {{'^',-1,0},{'v',1,0},{'>',0,1},{'<',0,-1}};
 
-typedef struct {char key1; char key2; char a; char b;} dir;
+typedef struct {char key1, key2, d;} dir;
 static dir dirs[] = {
-  {'^','>','R','F'},{'^','v','B','F'},{'^','<','L','F'},
-  {'v','>','L','F'},{'v','^','B','F'},{'v','<','R','F'},
-  {'>','v','R','F'},{'>','^','L','F'},{'>','<','B','F'},
-  {'<','v','L','F'},{'<','^','R','F'},{'<','>','B','F'}};
+  {'^','>','R'},{'^','v','B'},{'^','<','L'},
+  {'v','>','L'},{'v','^','B'},{'v','<','R'},
+  {'>','v','R'},{'>','^','L'},{'>','<','B'},
+  {'<','v','L'},{'<','^','R'},{'<','>','B'}};
 
 void doubleQueueSize (Queue *qp) {
   int i ;
@@ -124,7 +124,7 @@ char *convertPath(char* p){
     else {
       for (int k=0; k<12; ++k) 
         if (p[i] == dirs[k].key1 && p[i-1] == dirs[k].key2) 
-          {q[j++] = dirs[k].a; q[j++] = dirs[k].b; break;}
+          {q[j++] = dirs[k].d; q[j++] = 'F'; break;}
     }
   }
   q[j++] = 'F'; q[j] = '\0'; free(p); return q;
@@ -182,21 +182,18 @@ int main(int argc, char *argv[]) {
 
 
 /* TEST CASES 
-
 m1 = loadMaze(
         m1, 3, 11,
         "# #########" \
         "#        >#" \
         "#### ######" \
     );
-
 m1 = loadMaze(
         m1, 3, 10,
         "##########" \
         "#>       #" \
         "######## #" \
     );
-
 m1 = loadMaze(
         m1, 21, 41,
         "#########################################" \
@@ -221,7 +218,6 @@ m1 = loadMaze(
         "#     #     #     #   #     #   #   #    " \
         "#########################################" \
     );
-
   m1 = loadMaze(
         m1, 9, 9,
         "  #####  " \
@@ -234,7 +230,6 @@ m1 = loadMaze(
         "   # #   " \
         "    #    " \
     );  
-
   m1 = loadMaze(
         m1, 8, 10,
         "##########" \
@@ -246,5 +241,4 @@ m1 = loadMaze(
         "#      # #" \
         "######## #" \
     );
-
 */
