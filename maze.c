@@ -6,7 +6,7 @@ Maze *initMaze (){
   Maze *m = malloc(sizeof(Maze));
   unsigned w, h, i=0, j=0;  
   scanf("%u %u\n", &h, &w); 
-  m->height = h; m->width = w;
+  m->height = h; m->width = w; m->steps = 0; 
   char **grid = calloc(h, sizeof(char*));
   char **sol = calloc(h, sizeof(char*));
   int **bitGraph = calloc(h, sizeof(int*));

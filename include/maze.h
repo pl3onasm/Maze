@@ -6,7 +6,8 @@
 #include <string.h>
 
 typedef struct Maze{
-  unsigned height, width; char **grid, **sol; int **bitGraph;} Maze;
+  unsigned height, width, steps; 
+  char **grid, **sol; int **bitGraph;} Maze;
 
 typedef struct node *Node;
 

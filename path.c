@@ -40,7 +40,8 @@ char *getShortestPath(Maze *maze){
           maze->sol[p->row][p->col] = dirPath[i++] = p->dir; 
           b = p; 
         }
-        dirPath[i] = '\0'; free(p); freeQueue(q); 
+        dirPath[i] = '\0'; maze->steps = strlen(dirPath)-1;
+        free(p); freeQueue(q); 
         return convertPath(dirPath);
       }
       if (isValidNode(b, maze)){
