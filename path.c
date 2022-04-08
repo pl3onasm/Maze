@@ -15,6 +15,11 @@ char *convertPath(char* p){
   q[j++] = 'F'; q[j] = '\0'; free(p); return q;
 }
 
+int isValidNode(Node b, Maze *maze){
+  return (b->row >= 0 && b->row < maze->height && b->col >= 0 
+          && b->col < maze->width && maze->bitGraph[b->row][b->col]);
+}
+
 char *getShortestPath(Maze *maze){
   unsigned h = maze->height, w = maze->width;
   char *dirPath = malloc(sizeof(char)*(2*h*w+1));

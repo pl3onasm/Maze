@@ -6,6 +6,7 @@
 
 char *getShortestPath(Maze *maze); 
 char *convertPath(char* p);
+int isValidNode(Node b, Maze *maze); 
 
 typedef struct {char key; int x, y;} step;
 static step steps[] = {{'^',-1,0},{'v',1,0},{'>',0,1},{'<',0,-1}};

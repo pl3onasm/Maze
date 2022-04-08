@@ -17,8 +17,6 @@ Node newNode(int row, int col, Node parent, char dir);
 
 Node getStart(Maze *src); 
 
-int isValidNode(Node b, Maze *maze); 
-
 Maze *initMaze(); 
 
 void freeMaze (Maze *m); 

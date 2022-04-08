@@ -47,7 +47,4 @@ Node getStart(Maze *src){
   jump:; return newNode(i,j,NULL,c); 
 }
 
-int isValidNode(Node b, Maze *maze){
-  return (b->row >= 0 && b->row < maze->height && b->col >= 0 
-          && b->col < maze->width && maze->bitGraph[b->row][b->col]);
-}
+
