@@ -1,5 +1,4 @@
 #include "include/path.h"
-#include "include/queue.h"
 #include "include/maze.h"
 #include <time.h>
 #include <stdio.h>
