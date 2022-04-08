@@ -25,12 +25,12 @@ char *getShortestPath(Maze *maze){
   while (!isEmptyQueue(q)) {
     Node n = dequeue(&q);
     for (int i = 0; i < 4; i++) {
-      int c = n->col + steps[i].y, r = n->row + steps[i].x;
+      int r = n->row + steps[i].x, c = n->col + steps[i].y;
       Node b = newNode(r,c,n,steps[i].key); 
       if ((b->row == 0 || b->col == w-1 || b->col == 0 
       || b->row == h-1) && maze->bitGraph[b->row][b->col]){
-        Node p; unsigned i = 1; dirPath[0] = b->dir; 
-        maze->sol[b->row][b->col] = b->dir;
+        Node p; unsigned i = 1;  
+        dirPath[0] = maze->sol[b->row][b->col] = b->dir;
         while ((p = b->parent) != NULL){
           maze->sol[p->row][p->col] = dirPath[i++] = p->dir; 
           b = p; 
