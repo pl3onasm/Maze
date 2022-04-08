@@ -2,8 +2,8 @@
 #define QUEUE_H
 
 #include "path.h"
-#include "queue.h"
 #include "maze.h"
+#include <assert.h>
 
 typedef struct Queue {
   Node *array; int back, front, size;
