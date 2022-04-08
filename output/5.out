@@ -1,1 +1,33 @@
-No path found
+Initial problem:
+
+###### #######
+######     # #
+####  #### #  
+##       # # #
+##   >   # # #
+##       # # #
+##      ## # #
+## ######  # #
+## #   #   # #
+##   #   #   #
+##############
+
+Maze with path:
+
+###### #######
+######     # #
+####  #### #^>
+##       # #^#
+##   >   # #^#
+##   v   # #^#
+##<<<v  ## #^#
+##v######  #^#
+##v#^>>#^>>#^#
+##v>>#v>>#v>>#
+##############
+
+Path with directions:
+RFFRFFFLFFFLFF
+LFRFFRFLFFLFRF
+FRFLFFLFFFFFFF
+RFF
