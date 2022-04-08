@@ -6,13 +6,12 @@
 #include <string.h>
 
 typedef struct Maze{
-  unsigned height, width; char** grid; int **bitGraph;} Maze;
+  unsigned height, width; char **grid, **sol; int **bitGraph;} Maze;
 
 typedef struct node *Node;
 
 typedef struct node {
   int row, col; Node parent; char dir;} node;
-
 
 Node newNode(int row, int col, Node parent, char dir); 
 

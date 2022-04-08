@@ -6,10 +6,17 @@
 
 void print(char *path, Maze *maze){
   if (path == NULL) {printf("No path found\n"); return;}
-  printf("Maze with path:\n\n");
+  printf("Initial problem:\n\n");
+  for (int i = 0; i < maze->height; i++) {
+    for (int j = 0; j < maze->width; j++) {
+      printf("%c", maze->grid[i][j]);
+    }
+    printf("\n");
+  }
+  printf("\nMaze with path:\n\n");
   for (int i = 0; i < maze->height; i++) {
     for (int j = 0; j < maze->width; j++) 
-      printf("%c", maze->grid[i][j]);
+      printf("%c", maze->sol[i][j]);
     printf("\n");
   }
   printf("\nPath with directions:");

@@ -1,6 +1,6 @@
 #include "include/path.h"
 #include "include/queue.h"
-#include "include/maze.h"
+
 
 Maze *initMaze (){
   Maze *m = malloc(sizeof(Maze));
@@ -8,24 +8,27 @@ Maze *initMaze (){
   scanf("%u %u\n", &h, &w); 
   m->height = h; m->width = w;
   char **grid = calloc(h, sizeof(char*));
+  char **sol = calloc(h, sizeof(char*));
   int **bitGraph = calloc(h, sizeof(int*));
   for (i = 0; i < h; i++) {
     grid[i] = calloc(w+2,sizeof(char));
+    sol[i] = calloc(w+2,sizeof(char));
     bitGraph[i] = calloc(w, sizeof(int));
     for (j = 0; j < w; j++) {
-      grid[i][j] = getchar(); 
+      char c = getchar();
+      grid[i][j] = c; sol[i][j] = c; 
       if (grid[i][j] == ' ') bitGraph[i][j] = 1;
     }
-    getchar(); grid[i][j] = '\0';
+    getchar(); grid[i][j] = '\0'; sol[i][j] = '\0';
   }
-  m->grid = grid; m->bitGraph = bitGraph;
+  m->grid = grid; m->sol = sol; m->bitGraph = bitGraph;
   return m;
 }
 
 void freeMaze (Maze *m) {
   for (int i = 0; i < m->height; i++) {
-    free(m->grid[i]); free(m->bitGraph[i]);}
-  free(m->grid); free(m->bitGraph); free(m);
+    free(m->grid[i]); free(m->bitGraph[i]);free(m->sol[i]);}
+  free(m->grid); free(m->bitGraph); free(m->sol); free(m);
 }
 
 Node newNode(int row, int col, Node parent, char dir) {
