@@ -1,4 +1,3 @@
-#include "include/path.h"
 #include "include/queue.h"
 #include "include/maze.h"
 
