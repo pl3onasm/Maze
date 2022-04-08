@@ -1,13 +1,11 @@
-/* Escape the maze */
-
+/* The returned path is guaranteed to be the shortest one */
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
 
 typedef struct Maze{
-  unsigned height, width;
-  char** grid;} Maze;
+  unsigned height, width; char** grid; int **bitGraph;} Maze;
 
 typedef struct node *Node;
 
@@ -20,7 +18,7 @@ typedef struct Queue {
 typedef struct {char key; int x, y;} step;
 static step steps[] = {{'^',-1,0},{'v',1,0},{'>',0,1},{'<',0,-1}};
 
-typedef struct {char key1, key2, d;} dir;
+typedef struct {char key1, key2, dir;} dir;
 static dir dirs[] = {
   {'^','>','R'},{'^','v','B'},{'^','<','L'},
   {'v','>','L'},{'v','^','B'},{'v','<','R'},
@@ -28,12 +26,11 @@ static dir dirs[] = {
   {'<','v','L'},{'<','^','R'},{'<','>','B'}};
 
 void doubleQueueSize (Queue *qp) {
-  int i ;
   int oldSize = qp -> size;
   qp -> size = 2*oldSize;
   qp -> array = realloc (qp -> array, qp -> size*sizeof(node));
   assert (qp -> array != NULL) ;
-  for (i =0; i < qp -> back ; i ++) 
+  for (int i =0; i < qp -> back ; i ++) 
     {qp -> array [oldSize + i] = qp -> array [i];}
   qp -> back = qp -> back + oldSize; 
 }
@@ -56,9 +53,8 @@ void enqueue (Node item , Queue * qp) {
 }
 
 Node dequeue (Queue *qp) {
-  Node item ;
   if (isEmptyQueue (*qp)) queueEmptyError ();
-  item = qp -> array [qp -> front];
+  Node item = qp -> array [qp -> front];
   qp -> front = (qp -> front+1) % qp -> size;
   return item;
 }
@@ -69,52 +65,25 @@ void freeQueue (Queue q) {
 }
 
 Node newNode(int row, int col, Node parent, char dir) {
-  Node n = malloc (sizeof (node));
-  assert (n != NULL);
+  Node n = malloc (sizeof (node)); assert (n != NULL);
   n -> row = row; n -> col = col; 
   n -> parent = parent; n -> dir = dir;
   return n;
 }
 
-Node getStart(const Maze *src){
-  int i, j; char start[] = "<>^v";
+Node getStart(Maze *src){
+  unsigned i, j; char c, start[] = "<>^v";
   for(i=0; i<src->height; i++) 
     for(j=0; j<src->width; j++) {
-      char c = src->grid[i][j]; 
-      if(strchr(start,c)) return newNode(i,j,NULL,c); 
+      c = src->grid[i][j]; 
+      if(strchr(start,c)) goto jump;
     }
+  jump:; return newNode(i,j,NULL,c); 
 }
 
-int isValidNode(Node b, const Maze *maze, int **grid){
+int isValidNode(Node b, Maze *maze){
   return (b->row >= 0 && b->row < maze->height && b->col >= 0 
-          && b->col < maze->width && grid[b->row][b->col]);
-}
-
-Maze *loadMaze(Maze *m, unsigned height, unsigned width, const char *cellsStr){
-  int i, j; m = malloc(sizeof(Maze));
-  m->height = height; m->width = width;
-  char **grid = malloc(sizeof(char*) * height);
-  for (i = 0; i < height; i++) {
-    grid[i] = malloc(sizeof(char) * (width+1));
-    for (j = 0; j < width; j++) grid[i][j] = cellsStr[i*width+j];
-    grid[i][j] = '\0';
-  }
-  m->grid = grid;
-  return m;
-}
-
-int **initBitGraph(const Maze *src){
-  int **grid = malloc(sizeof(int*) * src->height); int j; 
-  for(int i=0; i<src->height; i++) {
-    grid[i] = malloc(sizeof(int) * (src->width+1));
-    for(j=0; j<src->width; j++) grid[i][j] = src->grid[i][j] == ' ' ? 1:0;
-  }
-  return grid; 
-}
-
-void freeGraph(int **bitGraph, int len){
-  for (int i=0; i<len; i++) free(bitGraph[i]);
-  free(bitGraph);
+          && b->col < maze->width && maze->bitGraph[b->row][b->col]);
 }
 
 char *convertPath(char* p){
@@ -124,16 +93,41 @@ char *convertPath(char* p){
     else {
       for (int k=0; k<12; ++k) 
         if (p[i] == dirs[k].key1 && p[i-1] == dirs[k].key2) 
-          {q[j++] = dirs[k].d; q[j++] = 'F'; break;}
+          {q[j++] = dirs[k].dir; q[j++] = 'F'; break;}
     }
   }
   q[j++] = 'F'; q[j] = '\0'; free(p); return q;
 }
 
-char *getShortestPath(const Maze *maze){
+Maze *initMaze (){
+  Maze *m = malloc(sizeof(Maze));
+  unsigned w, h; int i=0, j=0;  
+  scanf("%u %u\n", &h, &w); 
+  m->height = h; m->width = w;
+  char **grid = calloc(h, sizeof(char*));
+  int **bitGraph = calloc(h, sizeof(int*));
+  for (i = 0; i < h; i++) {
+    grid[i] = calloc(w+2,sizeof(char));
+    bitGraph[i] = calloc(w, sizeof(int));
+    for (j = 0; j < w; j++) {
+      grid[i][j] = getchar(); 
+      if (grid[i][j] == ' ') bitGraph[i][j] = 1;
+    }
+    getchar(); grid[i][j] = '\0';
+  }
+  m->grid = grid; m->bitGraph = bitGraph;
+  return m;
+}
+
+void freeMaze (Maze *m) {
+  for (int i = 0; i < m->height; i++) {
+    free(m->grid[i]); free(m->bitGraph[i]);}
+  free(m->grid); free(m->bitGraph); free(m);
+}
+
+char *getShortestPath(Maze *maze){
   unsigned h = maze->height, w = maze->width;
-  char *path = malloc(sizeof(char)*(2*h*w+1));
-  int **bitGraph = initBitGraph(maze); 
+  char *dirPath = malloc(sizeof(char)*(2*h*w+1));
   Queue q = newQueue(h*w);
   Node start = getStart(maze);
   enqueue(start, &q);
@@ -141,104 +135,44 @@ char *getShortestPath(const Maze *maze){
   while (!isEmptyQueue(q)) {
     Node n = dequeue(&q);
     for (int i = 0; i < 4; i++) {
-      int c = n->col + steps[i].y; 
-      int r = n->row + steps[i].x;
+      int c = n->col + steps[i].y, r = n->row + steps[i].x;
       Node b = newNode(r,c,n,steps[i].key); 
       if ((b->row == 0 || b->col == w-1 || b->col == 0 
-      || b->row == h-1) && bitGraph[b->row][b->col]) {
-        Node p; int i = 1; path[0] = b->dir; 
+      || b->row == h-1) && maze->bitGraph[b->row][b->col]) {
+        Node p; int i = 1; dirPath[0] = b->dir; maze->grid[b->row][b->col] = b->dir;
         while ((p = b->parent) != NULL) 
-          {path[i++] = p->dir; b = p;}
-        path[i] = '\0'; freeQueue(q); 
-        freeGraph(bitGraph, h);   
-        return convertPath(path);
+          {dirPath[i++] = p->dir; maze->grid[p->row][p->col] = p->dir;b = p;}
+        dirPath[i] = '\0'; freeQueue(q);   
+        return convertPath(dirPath);
       }
-      if (isValidNode(b, maze, bitGraph))
-        {enqueue(b, &q); bitGraph[b->row][b->col] = 0;}
+      if (isValidNode(b, maze))
+        {enqueue(b, &q); maze->bitGraph[b->row][b->col] = 0;}
       else free(b); 
     }
   } 
-  freeQueue(q); freeGraph(bitGraph, h); 
+  freeQueue(q); 
   return NULL; 
 }
 
-char *escape(const Maze *maze){
-  if(maze->grid == NULL) return NULL;
-  char *path = getShortestPath(maze);
-  return path;
+void print(char *path, Maze *maze){
+  if (path == NULL) {printf("No path found\n"); return;}
+  printf("Maze with path:\n\n");
+  for (int i = 0; i < maze->height; i++) {
+    for (int j = 0; j < maze->width; j++) 
+      printf("%c", maze->grid[i][j]);
+    printf("\n");
+  }
+  printf("\nPath with directions:");
+  for (int i=0; i < strlen(path); i++) {
+    if (!(i%maze->width)) printf("\n");
+    printf("%c", path[i]);
+  }
 }
 
 int main(int argc, char *argv[]) {
-  Maze *m1;
-  m1 = loadMaze(
-        m1, 3, 11,
-        "# #########" \
-        "#        >#" \
-        "###########" \
-    );
-  printf("%s\n", escape(m1));
+  Maze *maze = initMaze(maze); 
+  char *path = getShortestPath(maze);
+  print(path, maze);
+  freeMaze(maze); free(path);
   return 0;
 }
-
-
-/* TEST CASES 
-m1 = loadMaze(
-        m1, 3, 11,
-        "# #########" \
-        "#        >#" \
-        "#### ######" \
-    );
-m1 = loadMaze(
-        m1, 3, 10,
-        "##########" \
-        "#>       #" \
-        "######## #" \
-    );
-m1 = loadMaze(
-        m1, 21, 41,
-        "#########################################" \
-        "#<    #       #     #         # #   #   #" \
-        "##### # ##### # ### # # ##### # # # ### #" \
-        "# #   #   #   #   #   # #     #   #   # #" \
-        "# # # ### # ########### # ####### # # # #" \
-        "#   #   # # #       #   # #   #   # #   #" \
-        "####### # # # ##### # ### # # # #########" \
-        "#   #     # #     # #   #   # # #       #" \
-        "# # ####### ### ### ##### ### # ####### #" \
-        "# #             #   #     #   #   #   # #" \
-        "# ############### ### ##### ##### # # # #" \
-        "#               #     #   #   #   # #   #" \
-        "##### ####### # ######### # # # ### #####" \
-        "#   # #   #   # #         # # # #       #" \
-        "# # # # # # ### # # ####### # # ### ### #" \
-        "# # #   # # #     #   #     # #     #   #" \
-        "# # ##### # # ####### # ##### ####### # #" \
-        "# #     # # # #   # # #     # #       # #" \
-        "# ##### ### # ### # # ##### # # ### ### #" \
-        "#     #     #     #   #     #   #   #    " \
-        "#########################################" \
-    );
-  m1 = loadMaze(
-        m1, 9, 9,
-        "  #####  " \
-        " #     # " \
-        "#       #" \
-        "#       #" \
-        "#   ^   #" \
-        " #     # " \
-        "  #   #  " \
-        "   # #   " \
-        "    #    " \
-    );  
-  m1 = loadMaze(
-        m1, 8, 10,
-        "##########" \
-        "#        #" \
-        "#  ##### #" \
-        "#  #   # #" \
-        "#  #^# # #" \
-        "#  ### # #" \
-        "#      # #" \
-        "######## #" \
-    );
-*/

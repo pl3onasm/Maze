@@ -1,0 +1,16 @@
+Maze with path:
+
+##########
+# ^>>>>>>#
+# ^#####v#
+# ^#^>>#v#
+# ^#^#v#v#
+# ^###v#v#
+# <<<<v#v#
+########v#
+
+Path with directions:
+FRFFRFFFRF
+FFFRFFFFFR
+FFFFFFRFFF
+FFFF
