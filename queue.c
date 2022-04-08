@@ -3,11 +3,11 @@
 #include "include/maze.h"
 
 void doubleQueueSize (Queue *qp) {
-  int oldSize = qp -> size;
+  unsigned oldSize = qp -> size;
   qp -> size = 2*oldSize;
   qp -> array = realloc (qp -> array, qp -> size*sizeof(node));
   assert (qp -> array != NULL) ;
-  for (int i =0; i < qp -> back ; i ++) 
+  for (unsigned i =0; i < qp -> back ; i ++) 
     {qp -> array [oldSize + i] = qp -> array [i];}
   qp -> back = qp -> back + oldSize; 
 }
@@ -37,6 +37,6 @@ Node dequeue (Queue *qp) {
 }
 
 void freeQueue (Queue q) {
-  for (int i=0; i < q.size; i++) free (q.array[i]);
+  for (unsigned i=0; i < q.size; i++) free (q.array[i]);
   free (q.array);
 }

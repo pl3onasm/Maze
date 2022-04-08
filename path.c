@@ -3,8 +3,8 @@
 #include "include/maze.h"
 
 char *convertPath(char* p){
-  int j=0; char *q = malloc(sizeof(char) * 2*strlen(p));
-  for (int i = strlen(p)-1; i>0; i--) {
+  unsigned j=0; char *q = malloc(sizeof(char) * 2*strlen(p));
+  for (unsigned i = strlen(p)-1; i>0; i--) {
     if (p[i] == p[i-1]) q[j++] = 'F'; 
     else {
       for (int k=0; k<12; ++k) 
@@ -29,14 +29,14 @@ char *getShortestPath(Maze *maze){
       Node b = newNode(r,c,n,steps[i].key); 
       if ((b->row == 0 || b->col == w-1 || b->col == 0 
       || b->row == h-1) && maze->bitGraph[b->row][b->col]){
-        Node p; int i = 1; dirPath[0] = b->dir; 
+        Node p; unsigned i = 1; dirPath[0] = b->dir; 
         maze->sol[b->row][b->col] = b->dir;
         while ((p = b->parent) != NULL){
           dirPath[i++] = p->dir; 
           maze->sol[p->row][p->col] = p->dir;
-          b = p;
+          b = p; 
         }
-        dirPath[i] = '\0'; freeQueue(q);   
+        dirPath[i] = '\0'; freeQueue(q); 
         return convertPath(dirPath);
       }
       if (isValidNode(b, maze)){
@@ -49,4 +49,3 @@ char *getShortestPath(Maze *maze){
   freeQueue(q); 
   return NULL; 
 }
-

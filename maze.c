@@ -4,7 +4,7 @@
 
 Maze *initMaze (){
   Maze *m = malloc(sizeof(Maze));
-  unsigned w, h; int i=0, j=0;  
+  unsigned w, h, i=0, j=0;  
   scanf("%u %u\n", &h, &w); 
   m->height = h; m->width = w;
   char **grid = calloc(h, sizeof(char*));
@@ -26,7 +26,7 @@ Maze *initMaze (){
 }
 
 void freeMaze (Maze *m) {
-  for (int i = 0; i < m->height; i++) {
+  for (unsigned i = 0; i < m->height; i++) {
     free(m->grid[i]); free(m->bitGraph[i]);free(m->sol[i]);}
   free(m->grid); free(m->bitGraph); free(m->sol); free(m);
 }
