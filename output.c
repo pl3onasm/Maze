@@ -17,6 +17,7 @@ void print(char *path, Maze *maze){
     if (!(i%maze->width)) printf("\n");
     printf("%c", path[i]);
   }
+  printf("\n");
 }
 
 int main(int argc, char *argv[]) {

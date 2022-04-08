@@ -28,15 +28,21 @@ char *getShortestPath(Maze *maze){
       int c = n->col + steps[i].y, r = n->row + steps[i].x;
       Node b = newNode(r,c,n,steps[i].key); 
       if ((b->row == 0 || b->col == w-1 || b->col == 0 
-      || b->row == h-1) && maze->bitGraph[b->row][b->col]) {
-        Node p; int i = 1; dirPath[0] = b->dir; maze->grid[b->row][b->col] = b->dir;
-        while ((p = b->parent) != NULL) 
-          {dirPath[i++] = p->dir; maze->grid[p->row][p->col] = p->dir;b = p;}
+      || b->row == h-1) && maze->bitGraph[b->row][b->col]){
+        Node p; int i = 1; dirPath[0] = b->dir; 
+        maze->grid[b->row][b->col] = b->dir;
+        while ((p = b->parent) != NULL){
+          dirPath[i++] = p->dir; 
+          maze->grid[p->row][p->col] = p->dir;
+          b = p;
+        }
         dirPath[i] = '\0'; freeQueue(q);   
         return convertPath(dirPath);
       }
-      if (isValidNode(b, maze))
-        {enqueue(b, &q); maze->bitGraph[b->row][b->col] = 0;}
+      if (isValidNode(b, maze)){
+        enqueue(b, &q); 
+        maze->bitGraph[b->row][b->col] = 0;
+      }
       else free(b); 
     }
   } 
