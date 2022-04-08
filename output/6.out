@@ -9,12 +9,12 @@ Initial problem:
 # ################## ##################
 #                       ###############
 ###################  #              ###
-#                 #################  ##
-# ############### ## #              ###
+#                  ################  ##
+# ############### ##                ###
 # ###         ### ## # ################
 # ##      ####### ## #              ###
-#>###              #                 ##
-##################   ############## ###
+#  >#              # #               ##
+##################     ############ ###
 #######################################
 
 Maze with path:
@@ -28,17 +28,17 @@ Maze with path:
 #^################## ##################
 #<<<<<<<<<<<<<<<<<<<<<<^###############
 ###################  # <<<<<<<<<<<<^###
-#^>>>>>>>>>>>>>>>>#################^ ##
-#^###############v## #^>>>>>>>>>>>>>###
-#^###         ###v## #^################
-#^##      #######v## #^             ###
-#>###            v>#^>>              ##
-##################v>>############## ###
+#^>>>>>>>>>>>>>>>> ################^ ##
+#^###############v##^>>>>>>>>>>>>>>>###
+#^###         ###v##^# ################
+#^##      #######v##^#              ###
+#<<>#            v>#^#               ##
+##################v>>  ############ ###
 #######################################
 
 Path with directions:
-LFFFFRFFFFFFFFFFFFFFFFRFFFFLFRFLFFLFRFF
-LFFFRFFFFFFFFFFFFFLFFLFFFFFFFFFFFFRFLFF
-FFFFFFFFFFFFFFFFFFFFRFFFFFFRFFFFFFFFFFF
-FFFFFRFFLFFRFLFFRFLFFFFFFFFFFFFFFLFFLFF
-FFFFFFFFFFFRFFRFFFFFFFFFFFFFLFF
+BFFRFFFFRFFFFFFFFFFFFFFFFRFFFFLFRFLFFLF
+FFFRFFFFFFFFFFFFFFFLFFLFFFFFFFFFFFFRFLF
+FFFFFFFFFFFFFFFFFFFFFRFFFFFFRFFFFFFFFFF
+FFFFFFRFFLFFRFLFFRFLFFFFFFFFFFFFFFLFFLF
+FFFFFFFFFFFFRFFRFFFFFFFFFFFFFLFF
