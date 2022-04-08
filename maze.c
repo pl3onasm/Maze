@@ -15,8 +15,7 @@ Maze *initMaze (){
     sol[i] = calloc(w+2,sizeof(char));
     bitGraph[i] = calloc(w, sizeof(int));
     for (j = 0; j < w; j++) {
-      char c = getchar();
-      grid[i][j] = c; sol[i][j] = c; 
+      grid[i][j] = sol[i][j] = getchar();
       if (grid[i][j] == ' ') bitGraph[i][j] = 1;
     }
     getchar(); grid[i][j] = '\0'; sol[i][j] = '\0';

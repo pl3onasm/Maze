@@ -32,11 +32,10 @@ char *getShortestPath(Maze *maze){
         Node p; unsigned i = 1; dirPath[0] = b->dir; 
         maze->sol[b->row][b->col] = b->dir;
         while ((p = b->parent) != NULL){
-          dirPath[i++] = p->dir; 
-          maze->sol[p->row][p->col] = p->dir;
+          maze->sol[p->row][p->col] = dirPath[i++] = p->dir; 
           b = p; 
         }
-        dirPath[i] = '\0'; freeQueue(q); 
+        dirPath[i] = '\0'; free(p); freeQueue(q); 
         return convertPath(dirPath);
       }
       if (isValidNode(b, maze)){
